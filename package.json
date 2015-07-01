@@ -1,0 +1,27 @@
+{
+  "name": "codex",
+  "version": "1.0.0",
+  "description": "A wrapper around the Cisco SX80 Teleconference Codec XML API",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mirusresearch/codex/"
+  },
+  "keywords": [
+    "cisco",
+    "sx80"
+  ],
+  "author": "Don Spaulding <donspauldingii@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^3.10.0",
+    "request": "^2.58.0",
+    "xml2js": "^0.4.9"
+  },
+  "devDependencies": {
+    "jest-cli": "^0.4.14"
+  }
+}
