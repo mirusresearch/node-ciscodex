@@ -1,8 +1,8 @@
 import express from 'express';
-import codex from '../index';
+import ciscodex from '../index';
 
 var app = express();
-app.use(codex.utils.xmlBodyParser);
+app.use(ciscodex.utils.xmlBodyParser);
 
 app.post('/post', (req, res) =>{
   console.log("body:", req.body);

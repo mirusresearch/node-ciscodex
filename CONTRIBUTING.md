@@ -11,7 +11,7 @@ To that end, the ES6 source is kept in the `src` directory, and the transpiled s
 
 For development, here's the command used for transpilation:
 
-     $ cd path/to/codex
+     $ cd path/to/ciscodex
      $ babel ./src --watch --out-dir ./lib
 
 Once you're transpiling like a fool, you can run the tests on change
