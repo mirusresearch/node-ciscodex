@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import request from 'request';
-import xml2js from 'xml2js';
+import {xmlParser, xmlBuilder} from './utils';
 
 
 export default class Client {
@@ -19,7 +19,7 @@ export default class Client {
             request[method]({
                 url: self.endpoint + path,
                 qs: query,
-                body: _.isEmpty(body) ? undefined : (new xml2js.Builder()).buildObject(body),
+                body: _.isEmpty(body) ? undefined : xmlBuilder.buildObject(body),
                 auth: {username: self.username, password: self.password},
                 headers: {'content-type': 'text/xml'}
             }, (err, response, response_body) => {
@@ -28,31 +28,33 @@ export default class Client {
                 }
                 // console.log("response:", response);
                 console.log("response_body:", response_body);
-                xml2js.parseString(
+                xmlParser.parseString(
                     response_body,
-                    {
-                        tagNameProcessors: [xml2js.processors.normalize, xml2js.processors.stripPrefix],
-                        attrNameProcessors: [xml2js.processors.normalize]
-                    },
                     (err2, result) => {
-                    if (err2){
-                        reject(err2);
+                        if (err2){
+                            reject(err2);
+                        }
+                        var empty = (_.keys(result).length === 1) && (_.has(result, '$'));
+                        resolve(result, empty);
                     }
-                    resolve(result);
-                });
+                );
             });
         });
     }
 
+    sendCommand(command){
+        return this.callCodec('post', 'putxml', {}, {Command: command});
+    }
+
+    getXML(location){
+        return this.callCodec('get', 'getxml', {location: location});
+    }
+
     getStatus(location){
-        return this.callCodec(
-            'get',
-            'getxml',
-            {
-                location: '/Status/' + location
-            }
-        ).then((data) => {
-            return data.status[location.toLowerCase()];
+        let req = this.getXML('/Status/' + location)
+        req.then((status, empty) => {
+            console.log(empty);
+            return status[location.toLowerCase()];
         }).catch((err)=>{
             console.error(err);
         });
@@ -69,6 +71,23 @@ export default class Client {
     }
 
     getCallDuration(call){
-        return parseInt(call.duration[0]['_']);
+        return parseInt(call.duration['_']);
+    }
+
+    registerFeedbackEndpoint(slot, url, expressions){
+        var exprArray = [];
+        _.each(expressions, function(x, i){
+            exprArray.push({'$': {item: i}, '_': x});
+        });
+        this.sendCommand({
+            HttpFeedback: {
+                Register: {
+                    '$': {command: "True"},
+                    FeedbackSlot: slot,
+                    ServerUrl: url,
+                    Expression: exprArray
+                }
+            }
+        });
     }
 }

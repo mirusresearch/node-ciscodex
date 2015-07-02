@@ -17,6 +17,9 @@
   "author": "Don Spaulding <donspauldingii@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.13.1",
+    "express": "^4.13.0",
+    "express-xml-bodyparser": "0.0.7",
     "lodash": "^3.10.0",
     "request": "^2.58.0",
     "xml2js": "^0.4.9"
