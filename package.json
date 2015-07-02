@@ -1,6 +1,6 @@
 {
   "name": "ciscodex",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A wrapper around the Cisco SX80 Teleconference Codec XML API",
   "main": "lib/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mirusresearch/ciscodex/"
+    "url": "https://github.com/mirusresearch/node-ciscodex/"
   },
   "keywords": [
     "cisco",
