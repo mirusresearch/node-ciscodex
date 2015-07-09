@@ -1,6 +1,6 @@
 {
   "name": "ciscodex",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A wrapper around the Cisco SX80 Teleconference Codec XML API",
   "main": "lib/index.js",
   "scripts": {

@@ -6,28 +6,35 @@ import {xmlParser, xmlBuilder} from './utils';
 
 
 export default class Client {
-    constructor(username, password, ip_or_host){
-        this.username = username;
-        this.password = password;
+    constructor(username, password, ip_or_host, logdebug){
+        this.username   = username;
+        this.password   = password;
         this.ip_or_host = ip_or_host;
-        this.endpoint = `http://${ip_or_host}/`;
+        this.endpoint   = `http://${ip_or_host}/`;
+        this.logdebug   = logdebug || false;
+    }
+
+    debug(...args){
+        // console.log('calling debug',args);
+        if (this.logdebug){
+          console.log.apply(null,args);
+        }
     }
 
     callCodec(method, path, query={}, body={}){
-        var self = this;
+        this.debug('callCodec',[].slice.apply(arguments));
         return new Promise((resolve, reject) => {
             request[method]({
-                url: self.endpoint + path,
-                qs: query,
-                body: _.isEmpty(body) ? undefined : xmlBuilder.buildObject(body),
-                auth: {username: self.username, password: self.password},
-                headers: {'content-type': 'text/xml'}
+                url     : this.endpoint + path,
+                qs      : query,
+                body    : _.isEmpty(body) ? undefined : xmlBuilder.buildObject(body),
+                auth    : {username: this.username, password: this.password},
+                headers : {'content-type': 'text/xml'}
             }, (err, response, response_body) => {
                 if (err){
                     reject(err);
                 }
-                // console.log("response:", response);
-                console.log("response_body:", response_body);
+                this.debug("response_body:", response_body);
                 xmlParser.parseString(
                     response_body,
                     (err2, result) => {
@@ -43,17 +50,20 @@ export default class Client {
     }
 
     sendCommand(command){
+        this.debug("sendCommand:", command);
         return this.callCodec('post', 'putxml', {}, {Command: command});
     }
 
     getXML(location){
+        this.debug("getXML:", location);
         return this.callCodec('get', 'getxml', {location: location});
     }
 
     getStatus(location){
+        this.debug("getStatus:", location);
         let req = this.getXML('/Status/' + location)
         req.then((status, empty) => {
-            console.log(empty);
+            this.debug(empty);
             return status[location.toLowerCase()];
         }).catch((err)=>{
             console.error(err);
@@ -61,20 +71,24 @@ export default class Client {
     }
 
     getCurrentCalls(){
+        this.debug("getCurrentCalls:");
         return this.getStatus('Call');
     }
 
     getCurrentCall(){
+        this.debug("getCurrentCall:", call);
         return this.getCurrentCalls().then((calls)=>{
             return calls[0];
         });
     }
 
     getCallDuration(call){
+        this.debug("getCallDuration:", call);
         return parseInt(call.duration['_']);
     }
 
     registerFeedbackEndpoint(slot, url, expressions){
+        this.debug("registerFeedbackEndpoint:", slot, url, expressions);
         var exprArray = [];
         _.each(expressions, function(x, i){
             exprArray.push({'$': {item: i}, '_': x});
