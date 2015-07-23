@@ -39,13 +39,12 @@ export default class Client {
                 }
                 this.debug("response_body:", response_body);
                 xmlParser.parseString(response_body,(err2, result) => {
-                        if (err2){
-                            reject(err2);
-                        }
-                        var empty = (_.keys(result).length === 1) && (_.has(result, '$'));
-                        resolve(result, empty);
+                    if (err2){
+                        reject(err2);
                     }
-                );
+                    var empty = (_.keys(result).length === 1) && (_.has(result, '$'));
+                    resolve(result, empty);
+                });
             });
         });
     }
