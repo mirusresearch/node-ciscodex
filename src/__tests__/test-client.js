@@ -1,18 +1,10 @@
-// jest.dontMock('../index');
-
 import {Client} from '../index';
+var args = process.argv.slice(2);
+console.log('args:', args);
 
-// describe('client', function(){
-//     it('can get the call status', function(){
-//         var client = new Client(user, pass, host);
-//         var status = client.getCallStatus();
-//         expect(status.duration).toBe(10);
-//     });
-// });
-var client = new Client(user, pass, host);
-
-// client.getCurrentCall().then((call)=>{
-//     console.log(client.getCallDuration(call));
-// });
-
-client.registerFeedbackEndpoint(2, 'http://<your_ip>:8002/post/', ['/Configuration']);
+var codec = new Client(args[0], args[1], args[2], true);
+codec.registerFeedbackEndpoint(4, 'http://192.168.1.2:8002/post/', ['/Configuration']).then(function(result){
+    console.log('registerFeedbackEndpoint result:', result);
+}).catch(function(err){
+    console.error('ERROR:', err);
+});

@@ -6,6 +6,6 @@ app.use(ciscodex.utils.xmlBodyParser);
 
 app.post('/post', (req, res) =>{
   console.log("body:", req.body);
-})
+});
 
 app.listen(8002);
