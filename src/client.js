@@ -34,10 +34,11 @@ export default class Client {
                 if (err){
                     reject(err);
                 }
+                if (!response_body){
+                    reject(new Error('No response'));
+                }
                 this.debug("response_body:", response_body);
-                xmlParser.parseString(
-                    response_body,
-                    (err2, result) => {
+                xmlParser.parseString(response_body,(err2, result) => {
                         if (err2){
                             reject(err2);
                         }
