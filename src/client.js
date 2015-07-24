@@ -32,19 +32,20 @@ export default class Client {
                 headers: {'content-type': 'text/xml'}
             }, (err, response, response_body) => {
                 if (err){
-                    reject(err);
-                }
-                if (!response_body){
-                    reject(new Error('No response'));
+                    return reject(err);
                 }
                 this.debug("response_body:", response_body);
-                xmlParser.parseString(response_body,(err2, result) => {
-                    if (err2){
-                        reject(err2);
-                    }
-                    var empty = (_.keys(result).length === 1) && (_.has(result, '$'));
-                    resolve(result, empty);
-                });
+                if (_.isString(response_body)){
+                    xmlParser.parseString(response_body,(err2, result) => {
+                        if (err2){
+                            reject(err2);
+                        }
+                        var empty = (_.keys(result).length === 1) && (_.has(result, '$'));
+                        resolve(result, empty);
+                    });
+                }else{
+                    return reject(new Error('Response not a string:' + typeof response_body));
+                }
             });
         });
     }
