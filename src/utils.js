@@ -8,14 +8,14 @@ xml2js.processors.parseBooleans = xml2js.processors.parseBooleans || function(st
     return str;
 };
 
-var xmlParser = new xml2js.Parser({
+var parserOpts = {
     explicitArray: false,
     explicitRoot: false,
     ignoreAttrs:true,
     mergeAttrs:true,
     valueProcessors: [xml2js.processors.parseNumbers, xml2js.processors.parseBooleans],
     tagNameProcessors: [xml2js.processors.stripPrefix],
-});
+};
 
 export var xmlParser = new xml2js.Parser(parserOpts);
 export var xmlBodyParser = new expressXmlParser(parserOpts);
